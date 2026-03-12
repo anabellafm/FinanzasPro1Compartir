@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas Personales - Dashboard</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation & Filters -->
+        <aside class="sidebar">
+            <div class="brand">Finanzas Pro</div>
+
+            <!-- XP & Level Indicator -->
+            <div style="margin-top: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--secondary);">NIVEL Y LOGROS</span>
+                <span class="info-icon-small" onclick="window.showSectionInfo('logros')" title="Saber más">❔</span>
+            </div>
+            <div class="xp-container"
+                style="margin-bottom: 1.5rem; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: var(--radius-md); border: 1px solid var(--glass-border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--secondary);"
+                        id="user-level-name">NOVATO</span>
+                    <span style="font-size: 0.7rem; opacity: 0.8;" id="user-level-val">LVL 1</span>
+                </div>
+                <div style="background: rgba(0,0,0,0.3); height: 6px; border-radius: 3px; overflow: hidden;">
+                    <div id="xp-bar-fill"
+                        style="background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 0%; height: 100%; transition: width 0.5s ease;">
+                    </div>
+                </div>
+                <div style="font-size: 10px; margin-top: 4px; text-align: right; opacity: 0.6;" id="xp-text">0 / 500 XP
+                </div>
+                <button onclick="window.openLogrosModal()"
+                    style="width: 100%; margin-top: 0.8rem; background: rgba(139, 92, 246, 0.2); border: 1px solid var(--glass-border); color: var(--secondary); font-size: 0.7rem; padding: 0.3rem; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                    🎖️ Ver Logros
+                </button>
+            </div>
+
+            <div class="filter-group">
+                <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                    Filtros de Datos
+                    <span class="info-icon-small" onclick="window.showSectionInfo('filtros')" title="Saber más">❔</span>
+                </label>
+                <label class="form-label">Fechas</label>
+                <select id="filter-period" class="form-control">
+                    <option value="all">Todo el Historial</option>
+                    <option value="this-month" selected>Este Mes</option>
+                    <option value="last-month">Mes Anterior</option>
+                    <option value="this-year">Este Año</option>
+                    <option value="custom">Personalizado (Desde - Hasta)</option>
+                </select>
+
+                <div id="date-range-container" class="filter-group hidden"
+                    style="margin-top: 0.5rem; padding-left: 0.5rem; border-left: 2px solid var(--primary);">
+                    <label class="form-label" style="font-size: 0.8rem;">Desde</label>
+                    <input type="date" id="filter-date-start" class="form-control"
+                        style="font-size: 0.8rem; padding: 0.4rem;">
+
+                    <label class="form-label" style="font-size: 0.8rem; margin-top: 0.5rem;">Hasta</label>
+                    <input type="date" id="filter-date-end" class="form-control"
+                        style="font-size: 0.8rem; padding: 0.4rem;">
+                </div>
+            </div>
+
+            <!-- Sidebar Filters (Dropdowns) -->
+            <div class="filter-group">
+                <label class="form-label">Movimiento</label>
+                <select id="filter-flow" class="form-control">
+                    <option value="all">Todos (Ingresos y Egresos)</option>
+                    <option value="income">Solo Ingresos</option>
+                    <option value="expense">Solo Egresos</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="form-label">Tipo de Movimiento</label>
+                <select id="filter-type" class="form-control">
+                    <option value="all">Todos</option>
+                    <option value="fixed">Fijo</option>
+                    <option value="variable">Variable</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="form-label">Método de Pago</label>
+                <!-- Custom Multi-Select -->
+                <div class="custom-select-wrapper" id="payment-select-wrapper">
+                    <div class="select-trigger form-control" onclick="toggleSelect('payment')">
+                        <span id="payment-trigger-text">Todos</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="select-options hidden" id="payment-options">
+                        <label class="option-item"><input type="checkbox" value="all" checked
+                                onchange="handleMultiSelect('payment', this)"> Todos</label>
+                        <label class="option-item"><input type="checkbox" value="cash"
+                                onchange="handleMultiSelect('payment', this)"> Efectivo</label>
+                        <label class="option-item"><input type="checkbox" value="debit"
+                                onchange="handleMultiSelect('payment', this)"> Débito</label>
+                        <label class="option-item"><input type="checkbox" value="credit"
+                                onchange="handleMultiSelect('payment', this)"> Crédito</label>
+                        <label class="option-item"><input type="checkbox" value="transfer"
+                                onchange="handleMultiSelect('payment', this)"> Transferencia / App</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="form-label">Categoría</label>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <!-- Custom Multi-Select for Category -->
+                    <div class="custom-select-wrapper" id="category-select-wrapper" style="flex:1;">
+                        <div class="select-trigger form-control" onclick="toggleSelect('category')">
+                            <span id="category-trigger-text">Todas</span>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="select-options hidden" id="category-options">
+                            <label class="option-item"><input type="checkbox" value="all" checked
+                                    onchange="handleMultiSelect('category', this)"> Todas</label>
+                            <!-- JS Injects Categories Here -->
+                        </div>
+                    </div>
+                    <button id="btn-manage-cats-sidebar" class="btn-primary"
+                        style="padding: 0.4rem 0.6rem; font-size: 0.7rem; background: var(--bg-card-hover);"
+                        title="Administrar Categorías">⚙️</button>
+                </div>
+            </div>
+
+            <!-- Advanced Currency Settings -->
+            <div class="filter-group" style="padding-top: 1rem; border-top: 1px solid var(--glass-border);">
+                <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+                    Configuración Moneda
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <button id="btn-sync-currency" class="info-icon-small" title="Sincronizar Tasas" style="background:none; border:none; cursor:pointer; font-size:1rem; padding:0; filter: drop-shadow(0 0 5px var(--primary));">🔄</button>
+                        <span class="info-icon-small" onclick="window.showSectionInfo('cur_config')" title="Saber más">❔</span>
+                    </div>
+                </label>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <div>
+                        <label style="font-size: 0.7rem; color: var(--text-secondary);">Tu Moneda Local</label>
+                        <input type="text" id="currency-code" class="form-control" list="currency-suggestions"
+                            style="font-size: 0.8rem; padding: 0.4rem; text-transform: uppercase;">
+                        <span style="font-size: 10px; color: var(--text-muted); display: block; margin-top: 2px;">
+                            Escribe cualquier código (ej: GBP, JPY, BRL)
+                        </span>
+                        <datalist id="currency-suggestions">
+                            <option value="ARS">Peso Argentino</option>
+                            <option value="BRL">Real Brasileño</option>
+                            <option value="CLP">Peso Chileno</option>
+                            <option value="MXN">Peso Mexicano</option>
+                            <option value="PEN">Sol Peruano</option>
+                            <option value="UYU">Peso Uruguayo</option>
+                            <option value="COP">Peso Colombiano</option>
+                            <option value="PYG">Guaraní Paraguayo</option>
+                            <option value="USD">Dólar Estadounidense</option>
+                            <option value="EUR">Euro</option>
+                        </datalist>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.7rem; color: var(--text-secondary);">Ver Totales En</label>
+                        <select id="currency-view" class="form-control" style="font-size: 0.8rem; padding: 0.4rem;">
+                            <option value="LOCAL">Moneda Local</option>
+                            <option value="USD">Dólar (USD)</option>
+                            <option value="USDT">USDT (Tether)</option>
+                            <option value="USDC">USDC (Coin)</option>
+                            <option value="EUR">Euro (EUR)</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="exchange-grid" style="display: grid; gap: 0.5rem;">
+                    <div>
+                        <label class="form-label" style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                            <span>¿Cuántos <span class="local-symbol">ARS</span> cuesta 1 USD?</span>
+                            <span class="lock-indicator" id="lock-usd" title="Bloqueado manualmente" style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
+                        </label>
+                        <input type="number" id="rate-usd" class="form-control" placeholder="Ej: 1200"
+                            style="padding: 0.4rem;">
+                    </div>
+                    <div>
+                        <label class="form-label" style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                            <span>¿Cuántos <span class="local-symbol">ARS</span> cuesta 1 USDT?</span>
+                            <span class="lock-indicator" id="lock-usdt" title="Bloqueado manualmente" style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
+                        </label>
+                        <input type="number" id="rate-usdt" class="form-control" placeholder="Ej: 1210"
+                            style="padding: 0.4rem;">
+                    </div>
+                    <div>
+                        <label class="form-label" style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                            <span>¿Cuántos <span class="local-symbol">ARS</span> cuesta 1 USDC?</span>
+                            <span class="lock-indicator" id="lock-usdc" title="Bloqueado manualmente" style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
+                        </label>
+                        <input type="number" id="rate-usdc" class="form-control" placeholder="Ej: 1215"
+                            style="padding: 0.4rem;">
+                    </div>
+                    <div>
+                        <label class="form-label" style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                            <span>¿Cuántos <span class="local-symbol">ARS</span> cuesta 1 EUR?</span>
+                            <span class="lock-indicator" id="lock-eur" title="Bloqueado manualmente" style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
+                        </label>
+                        <input type="number" id="rate-eur" class="form-control" placeholder="Ej: 1300"
+                            style="padding: 0.4rem;">
+                    </div>
+                    <button id="btn-reset-locks" class="btn-primary" style="background: rgba(var(--primary-rgb), 0.1); font-size: 0.7rem; padding: 0.4rem; justify-content: center; margin-top: 0.5rem; display: none;">🔓 Liberar Bloqueos</button>
+                    <div id="currency-manager" style="display: contents;"></div>
+                </div>
+            </div>
+
+            <button id="btn-reset-filters" class="btn-primary"
+                style="background: var(--bg-card-hover); font-size: 0.8rem; justify-content: center;">
+                Limpiar Filtros
+            </button>
+
+
+            <!-- Theme Selector -->
+            <div style="padding-top: 1rem; border-top: 1px solid var(--glass-border);">
+                <label class="form-label"
+                    style="text-align: center; display: block; margin-bottom: 0.5rem;">Tema</label>
+                <div class="theme-selector">
+                    <!-- Presets -->
+                    <div class="theme-btn btn-nebula" onclick="setTheme('nebula')" title="Nebula"></div>
+                    <div class="theme-btn btn-ocean" onclick="setTheme('ocean')" title="Ocean"></div>
+                    <div class="theme-btn btn-forest" onclick="setTheme('forest')" title="Forest"></div>
+                    <div class="theme-btn btn-midnight" onclick="setTheme('midnight')" title="Midnight"></div>
+                    <div class="theme-btn btn-light" onclick="setTheme('light')" title="Light (Blanco)"></div>
+
+                    <!-- Custom -->
+                    <div class="theme-btn btn-custom" onclick="document.getElementById('bg-input').click()"
+                        title="Subir Imagen">📷</div>
+                    <input type="file" id="bg-input" hidden accept="image/*" onchange="handleCustomBg(this)">
+                </div>
+            </div>
+
+            <!-- Data Management Section -->
+            <div class="filter-group" style="padding-top: 1rem; border-top: solid 1px var(--glass-border);">
+                <label class="form-label" style="text-align:center; display:block;">Gestión de Datos</label>
+                <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                    <button id="btn-export" class="btn-primary"
+                        style="padding: 0.4rem; font-size: 0.8rem; background: var(--bg-card-hover);"
+                        title="Descargar Respaldo">⬇️ Exportar</button>
+                    <button id="btn-import-trigger" class="btn-primary"
+                        style="padding: 0.4rem; font-size: 0.8rem; background: var(--bg-card-hover);"
+                        title="Cargar Respaldo">⬆️ Importar</button>
+                    <input type="file" id="import-input" hidden accept=".json">
+                </div>
+                <button id="btn-reset-data" class="btn-primary"
+                    style="width: 100%; margin-top: 0.5rem; font-size: 0.75rem; background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3);">
+                    ⚠️ Borrar Todo
+                </button>
+            </div>
+
+            <div class="footer-sig" style="margin-top: 1rem; border-top: none;">
+                Diseñado por Ani Franza M.
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="section-header">
+                <div>
+                    <h1>Panel General</h1>
+                    <p style="color: var(--text-secondary)">Consciencia y Propósito en tus Finanzas</p>
+                </div>
+                <button id="btn-add-transaction" class="btn-primary">
+                    + Nuevo Registro
+                </button>
+            </header>
+
+            <!-- Financial Coach Section -->
+            <div id="coach-section" class="coach-section card">
+                <div class="coach-icon">🤖</div>
+                <div class="coach-content">
+                    <div class="coach-title" style="display: flex; align-items: center; gap: 0.5rem;">
+                        Coach Financiero
+                        <span class="info-icon-small" onclick="window.showSectionInfo('coach')"
+                            title="Saber más">❔</span>
+                    </div>
+                    <div id="coach-message" class="coach-message">
+                        ¡Hola! Estoy analizando tus datos para darte los mejores consejos. Sigue registrando tus
+                        movimientos para subir de nivel. 🚀
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="card" style="grid-column: span 3;">
+                    <div class="stat-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                        Balance Total (Saldos Reales)
+                        <span class="info-icon-small" onclick="window.showSectionInfo('balance_resumen')"
+                            title="Saber más">❔</span>
+                    </div>
+                    <div style="display: flex; gap: 2rem; align-items: baseline; flex-wrap: wrap;">
+                        <div>
+                            <div id="stat-balance-local" class="stat-value" style="color: var(--text-primary);">0.00
+                            </div>
+                            <div class="stat-label" style="font-size: 0.7rem;">En Moneda Local</div>
+                        </div>
+                        <div style="border-left: 1px solid var(--glass-border); padding-left: 1rem;">
+                            <div id="stat-balance-usd" class="stat-value"
+                                style="font-size: 1.5rem; color: var(--secondary);">0.00</div>
+                            <div class="stat-label" style="font-size: 0.7rem;">En USD</div>
+                        </div>
+                        <div style="border-left: 1px solid var(--glass-border); padding-left: 1rem;">
+                            <div id="stat-balance-usdt" class="stat-value"
+                                style="font-size: 1.5rem; color: var(--primary);">0.00</div>
+                            <div class="stat-label" style="font-size: 0.7rem;">En USDT</div>
+                        </div>
+                        <div style="border-left: 1px solid var(--glass-border); padding-left: 1rem;">
+                            <div id="stat-balance-usdc" class="stat-value" style="font-size: 1.5rem; color: #2775ca;">
+                                0.00</div>
+                            <div class="stat-label" style="font-size: 0.7rem;">En USDC</div>
+                        </div>
+                        <div style="border-left: 1px solid var(--glass-border); padding-left: 1rem;">
+                            <div id="stat-balance-eur" class="stat-value" style="font-size: 1.5rem; color: #ff9f43;">
+                                0.00</div>
+                            <div class="stat-label" style="font-size: 0.7rem;">En EUR</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="stat-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                        Ingresos
+                        <span class="info-icon-small" onclick="window.showSectionInfo('ingresos')"
+                            title="Saber más">❔</span>
+                    </div>
+                    <div id="stat-income" class="stat-value text-success" style="font-size: 1.5rem;">0.00</div>
+                    <div id="stat-income-currency" style="font-size: 0.7rem; color: var(--text-muted);">Local</div>
+                </div>
+                <div class="card">
+                    <div class="stat-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                        Egresos
+                        <span class="info-icon-small" onclick="window.showSectionInfo('egresos')"
+                            title="Saber más">❔</span>
+                    </div>
+                    <div id="stat-expense" class="stat-value text-danger" style="font-size: 1.5rem;">0.00</div>
+                    <div id="stat-expense-currency" style="font-size: 0.7rem; color: var(--text-muted);">Local</div>
+                </div>
+                <div class="card">
+                    <div class="stat-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                        Resultado
+                        <span class="info-icon-small" onclick="window.showSectionInfo('resultado')"
+                            title="Saber más">❔</span>
+                    </div>
+                    <div id="stat-result" class="stat-value" style="font-size: 1.5rem;">0.00</div>
+                    <div id="stat-result-currency" style="font-size: 0.7rem; color: var(--text-muted);">Local</div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <section class="charts-grid">
+                <div class="card chart-container-full">
+                    <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        📈 Evolución Temporal
+                        <span class="info-icon-small" onclick="window.showSectionInfo('evolucion')"
+                            title="Saber más">❔</span>
+                        <span style="font-size:0.7rem; color:var(--text-muted); font-weight:400; margin-left:0.5rem;">
+                            (✅ Superávit / ⚠️ Déficit)
+                        </span>
+                    </h3>
+                    <div id="chart-timeline"
+                        style="height: 240px; position: relative; overflow:hidden; display:flex; align-items:flex-end; gap:4px; padding-bottom:20px;">
+                    </div>
+                </div>
+                <div class="card chart-container-half">
+                    <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        📊 Por Categoría
+                        <span class="info-icon-small" onclick="window.showSectionInfo('categorias')"
+                            title="Saber más">❔</span>
+                    </h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; height:240px; overflow-y:auto;">
+                        <div id="chart-category-income"></div>
+                        <div id="chart-category-expense"></div>
+                    </div>
+                </div>
+                <div class="card chart-container-half">
+                    <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        💳 Por Método de Pago
+                        <span class="info-icon-small" onclick="window.showSectionInfo('metodos')"
+                            title="Saber más">❔</span>
+                    </h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; height:240px; overflow-y:auto;">
+                        <div id="chart-payment-income"></div>
+                        <div id="chart-payment-expense"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Goals Section Wrapper (The Big Container) -->
+            <section id="goals-section" class="goals-section-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h3 style="margin:0; display: flex; align-items: center; gap: 0.5rem;">
+                        Mis Objetivos Financieros
+                        <span class="info-icon-small" onclick="window.showSectionInfo('objetivos')"
+                            title="Saber más">❔</span>
+                    </h3>
+                    <button id="btn-add-goal" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                        + Nuevo Objetivo
+                    </button>
+                </div>
+
+                <!-- Global Commitments Summary -->
+                <div class="card" id="global-saving-monitor"
+                    style="margin-bottom: 2rem; border: 1px solid var(--primary); background: rgba(var(--primary-rgb), 0.05); padding: 1.5rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="margin:0; display: flex; align-items: center; gap: 0.5rem;">
+                            📊 Monitor de Compromisos
+                            <span class="info-icon-small" onclick="window.showSectionInfo('monitor')"
+                                title="Saber más">❔</span>
+                        </h4>
+                        <p style="font-size: 0.7rem; color: var(--text-muted); text-align: right;">
+                            Resumen de tus planes<br>de ahorro activos.
+                        </p>
+                    </div>
+                    <div id="saving-monitor-stats" class="saving-monitor-grid">
+                        <div class="stat-mini">
+                            <span class="stat-label" style="font-size: 0.7rem;">Compromiso Total</span>
+                            <div id="global-commitment-val" style="font-size: 1.1rem; font-weight: 700;">0%</div>
+                        </div>
+                        <div class="stat-mini">
+                            <span class="stat-label" style="font-size: 0.7rem;">Margen Libre Real</span>
+                            <div id="global-free-margin-val" style="font-size: 1.1rem; font-weight: 700;">$0</div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Goals List Grid -->
+                <div id="goals-list" class="goals-grid">
+                    <!-- JS creates goal cards here -->
+                </div>
+            </section>
+
+            <!-- Recent Transactions Section -->
+            <section class="transactions-section">
+                <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    Detalle de Movimientos
+                    <span class="info-icon-small" onclick="window.showSectionInfo('transacciones')"
+                        title="Saber más">❔</span>
+                </h3>
+                <div class="table-container">
+                    <div id="transactions-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <!-- JS creates rows here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 1.5rem;">Nuevo Movimiento</h2>
+            <form id="transaction-form">
+                <div class="form-group">
+                    <label class="form-label">Tipo de Movimiento</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <label class="flow-selector-label">
+                            <input type="radio" name="flow" value="income" required style="display: none;"> Ingreso
+                        </label>
+                        <label class="flow-selector-label">
+                            <input type="radio" name="flow" value="expense" required checked style="display: none;">
+                            Egreso
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Monto</label>
+                    <input type="number" name="amount" step="0.01" class="form-control" required placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" name="description" class="form-control" placeholder="Ej: Supermercado">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" name="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tipo</label>
+                        <select name="type" class="form-control">
+                            <option value="variable">Variable</option>
+                            <option value="fixed">Fijo</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Forma de Pago</label>
+                        <select name="paymentForm" class="form-control">
+                            <option value="cash">Efectivo</option>
+                            <option value="debit">Débito</option>
+                            <option value="credit">Crédito</option>
+                            <option value="transfer">Transferencia / App</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Moneda</label>
+                        <select name="currency" class="form-control">
+                            <option value="LOCAL">Moneda Local</option>
+                            <option value="USD">USD - Dólar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="USDT">USDT - Tether</option>
+                            <option value="USDC">USDC - USD Coin</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Nomad Fields (Compact & Optional) -->
+                <div id="nomad-form-fields">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" style="font-size: 0.75rem;">Banco / Plataforma</label>
+                            <input type="text" name="platform" class="form-control" placeholder="Ej: Wise, BBVA"
+                                style="padding: 0.4rem; font-size: 0.8rem;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="font-size: 0.75rem;">País / Ubicación</label>
+                            <input type="text" name="location" class="form-control" placeholder="Ej: España"
+                                style="padding: 0.4rem; font-size: 0.8rem;">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Categoría</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select name="category" id="form-category-select" class="form-control"></select>
+                        <button type="button" id="btn-manage-cats-form" class="btn-primary">+</button>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" id="btn-cancel" class="btn-primary"
+                        style="background: var(--bg-card-hover); color: var(--text-primary); flex: 1;">Cancelar</button>
+                    <button type="submit" class="btn-primary" style="flex: 2;">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-cats" class="modal-overlay hidden" style="z-index: 1100;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3 style="margin-bottom: 1rem;">Administrar Categorías</h3>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <input type="text" id="new-cat-input" class="form-control" placeholder="Nueva categoría...">
+                <button id="btn-add-cat" class="btn-primary">AGREGAR</button>
+            </div>
+            <div id="cat-manage-list"
+                style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+            <button id="btn-close-cats" class="btn-primary"
+                style="width: 100%; margin-top: 1rem; background: var(--bg-card-hover);">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modal-goal" class="modal-overlay hidden" style="z-index: 1100;">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 1.5rem;">Nuevo Objetivo</h2>
+            <form id="goal-form">
+                <div class="form-group">
+                    <label class="form-label">¿Qué quieres lograr?</label>
+                    <input type="text" name="goalName" class="form-control" required placeholder="Ej: Viaje a Japón ✈️">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Monto Objetivo</label>
+                        <input type="number" name="targetAmount" id="goal-target-amount" step="0.01"
+                            class="form-control" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Moneda Meta</label>
+                        <select name="goalCurrency" id="goal-currency" class="form-control">
+                            <option value="LOCAL">Moneda Local</option>
+                            <option value="USD">USD</option>
+                            <option value="USDT">USDT</option>
+                            <option value="USDC">USDC</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Prioridad de esta Meta</label>
+                    <select name="priority" id="goal-priority" class="form-control" required>
+                        <option value="1">1 - Máxima Prioridad (Se llena primero)</option>
+                        <option value="2">2 - Media</option>
+                        <option value="3">3 - Baja</option>
+                        <option value="4">4 - Ahorro Residual</option>
+                    </select>
+                </div>
+
+                <div class="form-group"
+                    style="background: rgba(var(--primary-rgb), 0.1); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--glass-border);">
+                    <label class="form-label" style="margin-bottom: 0.8rem;">Plan de Ahorro Automático 🤖</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <label class="form-label" style="font-size: 0.7rem;">% de Ingresos</label>
+                            <input type="number" name="planPercentage" id="goal-plan-percentage" class="form-control"
+                                placeholder="0" value="0" min="0" max="100">
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-size: 0.7rem;">Monto Fijo (Mensual)</label>
+                            <input type="number" name="planFixed" id="goal-plan-fixed" class="form-control"
+                                placeholder="0.00" value="0">
+                        </div>
+                    </div>
+                    <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem;">
+                        ℹ️ El sistema usará tu superávit real para cubrir estos objetivos según la prioridad.
+                    </p>
+                </div>
+
+                <div class="form-group" id="manual-amount-group" style="margin-top: 1rem;">
+                    <label class="form-label">
+                        Aportes Manuales Acumulados
+                        <span style="font-size:0.7rem; color:var(--text-muted); display:block;">(Dinero que ya separaste
+                            físicamente)</span>
+                    </label>
+                    <input type="number" name="manualAmount" id="goal-manual-amount" step="0.01" class="form-control"
+                        value="0">
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; margin-top: 1rem;">
+                    <label class="form-label" style="margin-bottom:0; font-size: 0.75rem;">Análisis de
+                        Viabilidad</label>
+                    <select id="feasibility-period" class="form-control"
+                        style="width: auto; font-size: 0.7rem; padding: 0.2rem 0.5rem;"
+                        onchange="checkGoalFeasibility()">
+                        <option value="current">Periodo Actual</option>
+                        <option value="history">Historial (3 meses)</option>
+                    </select>
+                </div>
+                <div id="goal-feasibility-notice" class="goal-message hidden"
+                    style="margin-bottom: 1rem; border: 1px dashed var(--warning);"></div>
+                <div class="form-group">
+                    <label class="form-label">Fecha Límite</label>
+                    <input type="date" name="deadline" class="form-control" required>
+                </div>
+                <div class="form-group" id="frequency-group">
+                    <label class="form-label">
+                        Ver Meta de Ahorro (Por:)
+                        <span style="font-size:0.65rem; color:var(--text-muted); display:block; margin-top:2px;">
+                            Define cómo quieres visualizar lo que necesitas ahorrar para esta meta.
+                        </span>
+                    </label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                        <select name="frequency" id="goal-frequency" class="form-control" onchange="toggleCustomFreq()">
+                            <option value="1">Diario</option>
+                            <option value="7">Semanal</option>
+                            <option value="15">Quincenal</option>
+                            <option value="30" selected>Mensual</option>
+                            <option value="365">Anual</option>
+                            <option value="custom">Personalizada (Días)</option>
+                        </select>
+                        <input type="number" name="customDays" id="goal-custom-days" class="form-control hidden"
+                            placeholder="Días (1-365)" min="1" max="365">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" id="btn-cancel-goal" class="btn-primary"
+                        style="background: var(--bg-card-hover); color: var(--text-primary); flex: 1;">Cancelar</button>
+                    <button type="submit" class="btn-primary" style="flex: 2;">Guardar Meta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <!-- Achievements Modal -->
+    <div id="modal-logros" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin: 0;">🏆 Tus Logros</h2>
+                <button onclick="closeModal(document.getElementById('modal-logros'))"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+            </div>
+            <div id="logros-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <!-- JS Injects Achievements Here -->
+            </div>
+        </div>
+    </div>
+    <!-- Help FAB (Manual) -->
+    <div class="help-fab manual-fab" id="help-trigger" onclick="window.openManual()"
+        title="Manual de Misión e Integralidad">
+        💡
+    </div>
+
+    <!-- Modal Onboarding (Interactive Manual) -->
+    <div id="modal-onboarding" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="modal-content" style="max-width: 600px; padding: 2.5rem; position: relative;">
+            <!-- Step 1: Misión -->
+            <div id="manual-step-1" class="manual-card">
+                <span class="manual-icon">🚀</span>
+                <h2 class="manual-title">Tu Brújula Financiera</h2>
+                <p class="manual-text">
+                    Bienvenido a un nuevo camino. Este Dashboard no es solo para contar monedas, es tu herramienta para
+                    conquistar la <b>Libertad Financiera</b> a través de la conciencia y el hábito.
+                </p>
+                <div class="manual-steps-dot">
+                    <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                </div>
+                <div class="manual-card-actions">
+                    <button onclick="nextManualStep(2)" class="btn-primary" style="width: 100%;">Comenzar el
+                        Viaje</button>
+                </div>
+            </div>
+
+            <!-- Step 2: La Base -->
+            <div id="manual-step-2" class="manual-card hidden">
+                <span class="manual-icon">📝</span>
+                <h2 class="manual-title">Monitor de Compromisos</h2>
+                <p class="manual-text">
+                    La clave es tu <b>Margen Libre</b>. Este se calcula sobre tu promedio real de los últimos 3 meses
+                    menos lo que ya comprometiste a tus objetivos.
+                    <br><br>
+                    Si el margen es <b>negativo</b> o <b>rojo</b>, significa que tus planes de ahorro superan tu
+                    capacidad real actual. ¡Ajusta los plazos o recorta gastos!
+                </p>
+                <div class="manual-steps-dot">
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                </div>
+                <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
+                    <button onclick="nextManualStep(1)" class="btn-primary btn-manual-back">Atrás</button>
+                    <button onclick="nextManualStep(3)" class="btn-primary">Entendido</button>
+                </div>
+            </div>
+
+            <!-- Step 3: El Cerebro -->
+            <div id="manual-step-3" class="manual-card hidden">
+                <span class="manual-icon">⚖️</span>
+                <h2 class="manual-title">El Cerebro: Prioridades</h2>
+                <p class="manual-text">
+                    ¿Te sobra dinero al final del mes? El sistema lo reparte automáticamente según tus <b>Prioridades
+                        (P1, P2...)</b>. La meta P1 siempre se llena primero usando tu superávit real.
+                </p>
+                <div class="manual-steps-dot">
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                </div>
+                <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
+                    <button onclick="nextManualStep(2)" class="btn-primary btn-manual-back">Atrás</button>
+                    <button onclick="nextManualStep(4)" class="btn-primary">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Step 4: El Guía -->
+            <div id="manual-step-4" class="manual-card hidden">
+                <span class="manual-icon">🤖</span>
+                <h2 class="manual-title">Tu Guía: El Coach</h2>
+                <p class="manual-text">
+                    El Coach Financiero analiza tus patrones y te da consejos en tiempo real. No solo mira números,
+                    cuida tus <b>hábitos</b> para que llegues a tus metas sin estrés.
+                </p>
+                <div class="integrity-grid">
+                    <div class="integrity-box">
+                        <h5>Insights</h5>
+                        <p>Detecta fugas de dinero.</p>
+                    </div>
+                    <div class="integrity-box">
+                        <h5>Motivación</h5>
+                        <p>Te empuja a seguir.</p>
+                    </div>
+                </div>
+                <div class="manual-steps-dot" style="margin-top:1.5rem;">
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                </div>
+                <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
+                    <button onclick="nextManualStep(3)" class="btn-primary btn-manual-back">Atrás</button>
+                    <button onclick="nextManualStep(5)" class="btn-primary">¡Genial!</button>
+                </div>
+            </div>
+
+            <!-- Step 5: El Juego -->
+            <div id="manual-step-5" class="manual-card hidden">
+                <span class="manual-icon">💎</span>
+                <h2 class="manual-title">Gamifica tu Ahorro</h2>
+                <p class="manual-text">
+                    Cada acción te da <b>XP (Experiencia)</b>. Sube de nivel, desbloquea insignias y convierte la
+                    gestión financiera en un desafío personal gratificante.
+                </p>
+                <div class="manual-steps-dot">
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                </div>
+                <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
+                    <button onclick="nextManualStep(4)" class="btn-primary btn-manual-back">Atrás</button>
+                    <button onclick="nextManualStep(6)" class="btn-primary">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Step 6: Integralidad -->
+            <div id="manual-step-6" class="manual-card hidden">
+                <span class="manual-icon">🌍</span>
+                <h2 class="manual-title">Un Ecosistema Íntegro</h2>
+                <p class="manual-text">
+                    Sidebar (Monedas) + Monitor Global + Metas. Todo está conectado. Tus decisiones en un lado afectan
+                    al resto. <b>Tú tienes el control total.</b>
+                </p>
+                <div class="integrity-grid">
+                    <div class="integrity-box">
+                        <h5>Global</h5>
+                        <p>Vista multimoneda real.</p>
+                    </div>
+                    <div class="integrity-box">
+                        <h5>Precisión</h5>
+                        <p>Cálculos exactos.</p>
+                    </div>
+                </div>
+                <div class="manual-steps-dot" style="margin-top:1.5rem;">
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                </div>
+                <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
+                    <button onclick="nextManualStep(5)" class="btn-primary btn-manual-back">Atrás</button>
+                    <button onclick="nextManualStep(7)" class="btn-primary">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Step 7: Estrategia de Monedas -->
+            <div id="manual-step-7" class="manual-card hidden">
+                <span class="manual-icon">💱</span>
+                <h2 class="manual-title">Poder Multimoneda</h2>
+                <p class="manual-text">
+                    La app no solo convierte valores; entiende tu <b>exposición al riesgo</b>. Puedes ahorrar en Dólares
+                    para metas de largo plazo mientras gestionas tus gastos diarios en moneda local.
+                    <br><br>
+                    Usa el <b>Lock (Bloqueo)</b> en el Sidebar para fijar cotizaciones si manejas efectivo propio.
+                </p>
+                <div class="manual-steps-dot">
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                </div>
+                <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
+                    <button onclick="nextManualStep(6)" class="btn-primary btn-manual-back">Atrás</button>
+                    <button onclick="nextManualStep(8)" class="btn-primary">Último Paso</button>
+                </div>
+            </div>
+
+            <!-- Step 8: El Futuro -->
+            <div id="manual-step-8" class="manual-card hidden">
+                <span class="manual-icon">🌟</span>
+                <h2 class="manual-title">Tu Futuro, Hoy</h2>
+                <p class="manual-text">
+                    Recuerda: la constancia vence al talento. Registra cada gasto, revisa tu <b>Excedente</b>
+                    semanalmente y deja que el Dashboard haga el trabajo pesado de recordarte por qué lo haces.
+                    <br><br>
+                    ¡La <b>Libertad Financiera</b> es una maratón, no un sprint!
+                </p>
+                <div class="manual-steps-dot">
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot active"></span>
+                </div>
+                <div class="manual-card-actions">
+                    <button onclick="finishManual()" class="btn-primary"
+                        style="width: 100%; background:var(--success);">¡Estoy Listo para Despegar!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Help Assistant Chat -->
+    <div id="help-chat-modal" class="modal-overlay hidden" style="z-index: 2500;">
+        <div class="modal-content help-chat-container">
+            <div class="help-chat-header">
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div class="assistant-avatar">🤖</div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 0.9rem;">Asistente Finanzas Pro</h3>
+                        <span style="font-size: 0.6rem; opacity: 0.7;">En línea ahora</span>
+                    </div>
+                </div>
+                <button onclick="closeHelpChat()"
+                    style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div id="help-chat-messages" class="help-chat-messages">
+                <div class="message assistant">
+                    ¡Hola! Soy tu asistente de Finanzas Pro. ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre cómo
+                    usar la app, qué significan los gráficos o consejos para ahorrar.
+                </div>
+            </div>
+            <form id="help-chat-form" class="help-chat-input-area">
+                <input type="text" id="help-chat-input" placeholder="Escribe tu duda aquí..." autocomplete="off"
+                    required>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Help Toggle (Chat Assistant) -->
+    <div class="help-fab chat-fab" id="chat-trigger" onclick="openHelpChat()" title="Hablar con el Asistente">
+        💬
+    </div>
+
+    <!-- Scripts -->
+    <script src="chatbot_knowledge.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
