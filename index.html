@@ -24,6 +24,24 @@
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <script>
+        // PURGA DE EMERGENCIA v12.3
+        const APP_VERSION = '12.3';
+        if (localStorage.getItem('finanzas_pro_v') !== APP_VERSION) {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    for(let reg of regs) reg.unregister();
+                });
+            }
+            localStorage.setItem('finanzas_pro_v', APP_VERSION);
+            // No recargamos aquí para evitar bucles, pero la siguiente carga será limpia
+        }
+    </script>
+    <style>
+        /* Refuerzo de visibilidad para FABs en móviles */
+        .help-fab { z-index: 9999 !important; }
+    </style>
 </head>
 
 <body>
