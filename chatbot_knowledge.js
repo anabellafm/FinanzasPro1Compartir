@@ -44,6 +44,9 @@ window.CHATBOT_KNOWLEDGE = {
     "consejo": "Mi mejor consejo: Págate a ti mismo primero. Automatiza el ahorro para tus objetivos prioritarios y vive con el resto. Ese es el camino más seguro hacia la paz mental y la riqueza generacional.",
     "vida": "Una vida rica no es la que más gasta, sino la que tiene más opciones. Manejar bien tus finanzas hoy te da el increíble poder de elegir deliberadamente cómo vivir tu vida mañana.",
     "futuro": "El futuro se construye hoy. Cada pequeña decisión financiera (incluso un egreso menor) es un voto por el tipo de futuro que quieres experimentar.",
+    "dispositivo": "¡Es muy fácil! Como tus datos son privados y se guardan solo en este navegador, para verlos en otro equipo debes:<br><br>1. En tu aparato actual, ve a la barra lateral (Mis Datos) y pulsa <b>'Guardar Copia'</b>.<br>2. Se descargará un archivo .json. Envíatelo a tu nuevo equipo (por Mail o WhatsApp).<br>3. En el nuevo aparato, abre la app y pulsa <b>'Subir Copia'</b> para cargar ese archivo.<br><br><b>¿Cuándo hacerlo?</b> Hazlo antes de cambiar de celular, semanalmente por seguridad o si piensas limpiar el historial de tu navegador.",
+    "sincronizar": "La sincronización es manual para proteger tu privacidad. Te recomiendo descargar tu <b>'Copia de Seguridad'</b> semanalmente. Es vital hacerlo antes de formatear tu equipo o si vas a empezar a usar la app en una computadora nueva.",
+    "datos": "¡Tus datos son sagrados! Por eso se guardan exclusivamente en tu navegador (LocalStorage). Nadie más puede verlos. Como no hay una base de datos central, tú eres el guardián de tu información. ¡Usa el botón <b>'Guardar Copia'</b> a menudo!",
 
     // Errores o Desconocido (Fallback)
     "fallback": "Lo siento, no tengo esa información específica. Prueba preguntando por <b>'metas'</b>, <b>'coach'</b> o <b>'margen libre'</b>. También recuerda que cada sección tiene un icono de ❔ con explicaciones detalladas."

@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="styles.css?v=12">
 
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
@@ -250,19 +250,22 @@
 
             <!-- Data Management Section -->
             <div class="filter-group" style="padding-top: 1rem; border-top: solid 1px var(--glass-border);">
-                <label class="form-label" style="text-align:center; display:block;">Gestión de Datos</label>
-                <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                <label class="form-label" style="text-align:center; display:block; font-weight: 700;">💾 Mis Datos y Respaldo</label>
+                <p style="font-size: 0.65rem; color: var(--text-muted); text-align: center; margin-bottom: 0.8rem;">
+                    Los datos se guardan solo en este navegador. Si cambias de equipo, usa estos botones:
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
                     <button id="btn-export" class="btn-primary"
-                        style="padding: 0.4rem; font-size: 0.8rem; background: var(--bg-card-hover);"
-                        title="Descargar Respaldo">⬇️ Exportar</button>
+                        style="padding: 0.6rem 0.4rem; font-size: 0.75rem; background: rgba(var(--primary-rgb), 0.1); border: 1px solid var(--primary);"
+                        title="Descargar Respaldo">⬇️ Guardar Copia</button>
                     <button id="btn-import-trigger" class="btn-primary"
-                        style="padding: 0.4rem; font-size: 0.8rem; background: var(--bg-card-hover);"
-                        title="Cargar Respaldo">⬆️ Importar</button>
+                        style="padding: 0.6rem 0.4rem; font-size: 0.75rem; background: rgba(var(--primary-rgb), 0.1); border: 1px solid var(--primary);"
+                        title="Cargar Respaldo">⬆️ Subir Copia</button>
                     <input type="file" id="import-input" hidden accept=".json">
                 </div>
                 <button id="btn-reset-data" class="btn-primary"
-                    style="width: 100%; margin-top: 0.5rem; font-size: 0.75rem; background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3);">
-                    ⚠️ Borrar Todo
+                    style="width: 100%; margin-top: 0.5rem; font-size: 0.7rem; background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2);">
+                    ⚠️ Borrar todo en este equipo
                 </button>
             </div>
 
@@ -681,7 +684,8 @@
     </div>
 
     <!-- Achievements Modal -->
-    <div id="modal-logros" class="modal-overlay">
+    <!-- Achievements Modal -->
+    <div id="modal-logros" class="modal-overlay hidden">
         <div class="modal-content" style="max-width: 500px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2 style="margin: 0;">🏆 Tus Logros</h2>
@@ -693,18 +697,19 @@
             </div>
         </div>
     </div>
-    <!-- Help FAB (Manual) -->
-    <div class="help-fab manual-fab" id="help-trigger" onclick="window.openManual()"
-        title="Manual de Misión e Integralidad">
-        💡
-    </div>
+
+    <!-- Modals and Overlays are siblings of FABs for better CSS targeting -->
 
     <!-- Modal Onboarding (Interactive Manual) -->
-    <div id="modal-onboarding" class="modal-overlay hidden" style="z-index: 2000;">
+    <div id="modal-onboarding" class="modal-overlay hidden" style="z-index: 2000; pointer-events: all;" data-mandatory="true">
         <div class="modal-content" style="max-width: 600px; padding: 2.5rem; position: relative;">
+            <!-- Removed Close Button to force reading -->
             <!-- Step 1: Misión -->
             <div id="manual-step-1" class="manual-card">
-                <span class="manual-icon">🚀</span>
+                <div style="background: rgba(var(--primary-rgb), 0.1); border: 1px solid var(--primary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <p style="font-size: 0.8rem; margin: 0; color: var(--primary); font-weight: 700;">⚠️ ATENCIÓN: Por favor, lee cada paso con detenimiento.</p>
+                    <p style="font-size: 0.75rem; margin: 0.5rem 0 0 0; line-height: 1.3;">Este sistema utiliza una metodología de <b>Integralidad</b>. Usarlo sin comprenderlo puede darte una falsa sensación de control o conclusiones erróneas sobre tu economía.</p>
+                </div>
                 <h2 class="manual-title">Tu Brújula Financiera</h2>
                 <p class="manual-text">
                     Bienvenido a un nuevo camino. Este Dashboard no es solo para contar monedas, es tu herramienta para
@@ -712,6 +717,8 @@
                 </p>
                 <div class="manual-steps-dot">
                     <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
@@ -746,6 +753,8 @@
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
                 </div>
                 <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
                     <button onclick="nextManualStep(1)" class="btn-primary btn-manual-back">Atrás</button>
@@ -770,6 +779,8 @@
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
                 </div>
                 <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
                     <button onclick="nextManualStep(2)" class="btn-primary btn-manual-back">Atrás</button>
@@ -777,29 +788,30 @@
                 </div>
             </div>
 
-            <!-- Step 4: El Guía -->
+            <!-- Step 4: Tu Guía: El Coach -->
             <div id="manual-step-4" class="manual-card hidden">
-                <span class="manual-icon">🤖</span>
-                <h2 class="manual-title">Tu Guía: El Coach</h2>
-                <p class="manual-text">
-                    El Coach Financiero analiza tus patrones y te da consejos en tiempo real. No solo mira números,
-                    cuida tus <b>hábitos</b> para que llegues a tus metas sin estrés.
+                <span class="manual-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">🤖</span>
+                <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Tu Guía: El Coach</h2>
+                <p class="manual-text" style="font-size: 0.9rem; margin-bottom: 0.6rem;">
+                    El Coach Financiero analiza tus patrones y te da consejos en tiempo real para cuidar tus hábitos.
                 </p>
-                <div class="integrity-grid">
-                    <div class="integrity-box">
-                        <h5>Insights</h5>
-                        <p>Detecta fugas de dinero.</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.6rem;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Consejos AI</p>
+                        <p style="margin:0; font-size: 0.6rem;">Alertas y fugas.</p>
                     </div>
-                    <div class="integrity-box">
-                        <h5>Motivación</h5>
-                        <p>Te empuja a seguir.</p>
+                    <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Motivación</p>
+                        <p style="margin:0; font-size: 0.6rem;">Te empuja a seguir.</p>
                     </div>
                 </div>
-                <div class="manual-steps-dot" style="margin-top:1.5rem;">
+                <div class="manual-steps-dot">
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
@@ -828,32 +840,33 @@
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
                 </div>
-                <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
-                    <button onclick="nextManualStep(4)" class="btn-primary btn-manual-back">Atrás</button>
-                    <button onclick="nextManualStep(6)" class="btn-primary">Siguiente</button>
+                <div class="manual-card-actions" style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button onclick="nextManualStep(4)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(6)" class="btn-primary" style="flex: 1;">Siguiente</button>
                 </div>
             </div>
 
-            <!-- Step 6: Integralidad -->
+            <!-- Step 6: Un Ecosistema Íntegro -->
             <div id="manual-step-6" class="manual-card hidden">
-                <span class="manual-icon">🌍</span>
-                <h2 class="manual-title">Un Ecosistema Íntegro</h2>
-                <p class="manual-text">
-                    Sidebar (Monedas) + Monitor Global + Metas. Todo está conectado. Tus decisiones en un lado afectan
-                    al resto. <b>Tú tienes el control total.</b>
+                <span class="manual-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">🌍</span>
+                <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Un Ecosistema Íntegro</h2>
+                <p class="manual-text" style="font-size: 0.9rem; margin-bottom: 0.6rem;">
+                    Todo está conectado: Sidebar, Monitor Global y Metas. Tus decisiones afectan a todo el sistema.
                 </p>
-                <div class="integrity-grid">
-                    <div class="integrity-box">
-                        <h5>Global</h5>
-                        <p>Vista multimoneda real.</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.6rem;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Integridad</p>
+                        <p style="margin:0; font-size: 0.6rem;">Vista Multimoneda.</p>
                     </div>
-                    <div class="integrity-box">
-                        <h5>Precisión</h5>
-                        <p>Cálculos exactos.</p>
+                    <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Control</p>
+                        <p style="margin:0; font-size: 0.6rem;">Precisión total.</p>
                     </div>
                 </div>
-                <div class="manual-steps-dot" style="margin-top:1.5rem;">
+                <div class="manual-steps-dot">
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
@@ -862,10 +875,12 @@
                     <span class="manual-dot active"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
                 </div>
-                <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
-                    <button onclick="nextManualStep(5)" class="btn-primary btn-manual-back">Atrás</button>
-                    <button onclick="nextManualStep(7)" class="btn-primary">Siguiente</button>
+                <div class="manual-card-actions" style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                    <button onclick="nextManualStep(5)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(7)" class="btn-primary" style="flex: 1;">Siguiente</button>
                 </div>
             </div>
 
@@ -879,31 +894,18 @@
                     <br><br>
                     Usa el <b>Lock (Bloqueo)</b> en el Sidebar para fijar cotizaciones si manejas efectivo propio.
                 </p>
-                <div class="manual-steps-dot">
-                    <span class="manual-dot"></span>
-                    <span class="manual-dot"></span>
-                    <span class="manual-dot"></span>
-                    <span class="manual-dot"></span>
-                    <span class="manual-dot"></span>
-                    <span class="manual-dot"></span>
-                    <span class="manual-dot active"></span>
-                    <span class="manual-dot"></span>
-                </div>
-                <div class="manual-card-actions" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem;">
-                    <button onclick="nextManualStep(6)" class="btn-primary btn-manual-back">Atrás</button>
-                    <button onclick="nextManualStep(8)" class="btn-primary">Último Paso</button>
+                <div class="manual-card-actions" style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button onclick="nextManualStep(6)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(8)" class="btn-primary" style="flex: 1;">Último Paso</button>
                 </div>
             </div>
 
-            <!-- Step 8: El Futuro -->
+            <!-- Step 8: Seguridad de Datos -->
             <div id="manual-step-8" class="manual-card hidden">
-                <span class="manual-icon">🌟</span>
-                <h2 class="manual-title">Tu Futuro, Hoy</h2>
-                <p class="manual-text">
-                    Recuerda: la constancia vence al talento. Registra cada gasto, revisa tu <b>Excedente</b>
-                    semanalmente y deja que el Dashboard haga el trabajo pesado de recordarte por qué lo haces.
-                    <br><br>
-                    ¡La <b>Libertad Financiera</b> es una maratón, no un sprint!
+                <span class="manual-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">📲</span>
+                <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Tus Datos, Tu Control</h2>
+                <p class="manual-text" style="font-size: 0.9rem; margin-bottom: 1rem;">
+                    Esta App es 100% privada. Usa <b>"Guardar Copia"</b> para respaldar tu información y moverla de un equipo a otro.
                 </p>
                 <div class="manual-steps-dot">
                     <span class="manual-dot"></span>
@@ -914,10 +916,80 @@
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
                     <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
                 </div>
-                <div class="manual-card-actions">
-                    <button onclick="finishManual()" class="btn-primary"
-                        style="width: 100%; background:var(--success);">¡Estoy Listo para Despegar!</button>
+                <div class="manual-card-actions" style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button onclick="nextManualStep(7)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(9)" class="btn-primary" style="flex: 1;">Desafío Final</button>
+                </div>
+            </div>
+
+
+
+            <!-- Step 9: Desafío Final -->
+            <div id="manual-step-9" class="manual-card hidden">
+                <span class="manual-icon" style="font-size: 2.2rem; margin-bottom: 0.5rem;">🎓</span>
+                <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Desafío Final</h2>
+                <div style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
+                    <p style="font-size: 0.9rem; color: #fff; line-height: 1.3; margin: 0; font-weight: 600;">
+                        ¿Cuál es el indicador clave que te dice si tus metas son sostenibles en el tiempo?
+                    </p>
+                </div>
+                <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
+                    <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 1)" style="padding: 0.6rem; font-size: 0.85rem;">A) El Saldo Total</button>
+                    <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 2)" style="padding: 0.6rem; font-size: 0.85rem;">B) El Margen Libre</button>
+                    <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 3)" style="padding: 0.6rem; font-size: 0.85rem;">C) El nivel de XP</button>
+                </div>
+                <div id="quiz-feedback-1" class="quiz-feedback"></div>
+                <div class="manual-steps-dot">
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot active"></span>
+                    <span class="manual-dot"></span>
+                </div>
+                <div class="manual-card-actions" style="display: flex; gap: 0.8rem; margin-top: 0.5rem;">
+                    <button onclick="nextManualStep(8)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(10)" class="btn-primary" style="flex: 1;">Continuar</button>
+                </div>
+            </div>
+
+            <!-- Step 10: Certificación de Datos -->
+            <div id="manual-step-10" class="manual-card hidden">
+                <span class="manual-icon" style="font-size: 2.2rem; margin-bottom: 0.5rem;">💾</span>
+                <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Certificación de Datos</h2>
+                <div style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
+                    <p style="font-size: 0.9rem; color: #fff; line-height: 1.3; margin: 0; font-weight: 600;">
+                        Si cambias de celular o equipo, ¿cómo recuperas tu información?
+                    </p>
+                </div>
+                <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
+                    <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 2)" style="padding: 0.6rem; font-size: 0.85rem;">B) Debo usar mi Copia de Seguridad</button>
+                    <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 1)" style="padding: 0.6rem; font-size: 0.85rem;">A) Sincronización Gmail</button>
+                    <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 3)" style="padding: 0.6rem; font-size: 0.85rem;">C) Soporte Técnico</button>
+                </div>
+                <div id="quiz-feedback-2" class="quiz-feedback"></div>
+                <div class="manual-steps-dot">
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot"></span>
+                    <span class="manual-dot active"></span>
+                </div>
+                <div class="manual-card-actions" style="display: flex; gap: 0.8rem; margin-top: 0.5rem;">
+                    <button onclick="nextManualStep(9)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1; padding: 0.6rem;">Atrás</button>
+                    <button onclick="finishManual()" class="btn-primary" style="flex: 1; padding: 0.6rem;">Finalizar</button>
                 </div>
             </div>
         </div>
@@ -937,9 +1009,15 @@
                     style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div id="help-chat-messages" class="help-chat-messages">
-                <div class="message assistant">
-                    ¡Hola! Soy tu asistente de Finanzas Pro. ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre cómo
-                    usar la app, qué significan los gráficos o consejos para ahorrar.
+                <div class="message assistant" style="line-height: 1.4; font-size: 0.85rem;">
+                    <b>¡Hola! Soy tu asistente.</b> 😊<br>
+                    Puedes escribirme tus dudas o usar los botones rápidos. Entiendo palabras como: <i>metas, coach, xp, margen libre</i>.
+                </div>
+                <div class="chat-suggestions" style="padding: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center;">
+                    <button class="chip" onclick="askChat('¿Qué es el Margen Libre?')">📊 Margen Libre</button>
+                    <button class="chip" onclick="askChat('¿Cómo mover datos a otro equipo?')">📲 Sincronizar</button>
+                    <button class="chip" onclick="askChat('¿Cómo uso las metas?')">🎯 Objetivos</button>
+                    <button class="chip" onclick="askChat('Coach')">🤖 Coach</button>
                 </div>
             </div>
             <form id="help-chat-form" class="help-chat-input-area">
@@ -950,14 +1028,18 @@
         </div>
     </div>
 
-    <!-- Help Toggle (Chat Assistant) -->
-    <div class="help-fab chat-fab" id="chat-trigger" onclick="openHelpChat()" title="Hablar con el Asistente">
+    <div class="help-fab manual-fab" id="help-trigger" onclick="window.openManual()"
+        title="Manual de Misión e Integralidad">
+        💡
+    </div>
+    <div class="help-fab chat-fab" id="chat-trigger" onclick="window.openHelpChat()"
+        title="Asistente Finanzas Pro">
         💬
     </div>
 
     <!-- Scripts -->
     <script src="chatbot_knowledge.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=12"></script>
 </body>
 
 </html>

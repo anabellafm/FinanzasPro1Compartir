@@ -498,10 +498,22 @@ function openModal(modal) {
     modal.style.display = 'flex';
     const content = modal.querySelector('.modal-content');
     if (content) content.scrollTop = 0;
+
+    // Safety: If it's mandatory, disable body scroll or close triggers
+    if (modal.dataset.mandatory === "true") {
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function closeModal(modal) {
     if (!modal) return;
+    if (modal.dataset.mandatory === "true") {
+        if (!localStorage.getItem('onboardingDone')) {
+            showToast("⚠️ Es necesario completar la guía antes de continuar.", "warning");
+            return;
+        }
+        document.body.style.overflow = '';
+    }
     modal.classList.add('hidden');
     // Giving time for CSS transitions if any
     setTimeout(() => {
@@ -521,13 +533,39 @@ function closeModal(modal) {
 
 
 // --- Event Listeners ---
+window.checkOnboardingAndOpen = (modalId) => {
+    if (!localStorage.getItem('onboardingDone')) {
+        showToast("💡 Primero conoce la Brújula Financiera para un correcto uso.", "info");
+        window.openManual();
+        return;
+    }
+    const modal = document.getElementById(modalId);
+    if (modalId === 'modal') {
+        editingId = null;
+        document.querySelector('#modal h2').textContent = 'Nuevo Movimiento';
+    }
+    openModal(modal);
+};
+
+window.checkOnboardingAndExport = () => {
+    if (!localStorage.getItem('onboardingDone')) {
+        showToast("💡 Primero conoce la Brújula Financiera.", "info");
+        window.openManual();
+        return;
+    }
+    exportData();
+};
+
 elements.btnAdd.addEventListener('click', () => {
-    editingId = null;
-    document.querySelector('#modal h2').textContent = 'Nuevo Movimiento';
-    openModal(elements.modal);
+    window.checkOnboardingAndOpen('modal');
 });
 elements.btnCancel.addEventListener('click', () => closeModal(elements.modal));
-elements.modal.addEventListener('click', (e) => { if (e.target === elements.modal) closeModal(elements.modal); });
+elements.modal.addEventListener('click', (e) => { 
+    if (e.target === elements.modal) {
+        if (elements.modal.dataset.mandatory === "true" && !localStorage.getItem('onboardingDone')) return;
+        closeModal(elements.modal); 
+    }
+});
 
 const openCats = () => { renderCatManagerList(); openModal(elements.modalCats); };
 elements.btnManageCatsForm.addEventListener('click', openCats);
@@ -1994,9 +2032,52 @@ window.showSectionInfo = (section) => {
     }
 };
 
-window.finishManual = () => { localStorage.setItem('onboardingDone', 'true'); closeModal(elements.modalOnboarding); };
+window.validateQuiz = (questionId, option) => {
+    const feedback = document.getElementById(`quiz-feedback-${questionId}`);
+    
+    if (questionId === 1) {
+        if (option === 2) {
+            feedback.innerHTML = '<span style="color:var(--success)">✨ ¡Correcto! El Margen Libre es tu verdadera brújula.</span>';
+            setTimeout(() => {
+                window.nextManualStep(10);
+            }, 1000);
+        } else {
+            feedback.innerHTML = '<span style="color:var(--warning)">❌ No exactamente. Revisa el Paso 2 sobre el Margen Libre.</span>';
+        }
+    } else if (questionId === 2) {
+        if (option === 2) {
+            feedback.innerHTML = '<span style="color:var(--success)">✨ ¡Exacto! Eres responsable de tu propia copia.</span>';
+            setTimeout(() => {
+                window.finishManual();
+            }, 1000);
+        } else {
+            feedback.innerHTML = '<span style="color:var(--warning)">❌ Error. Esta App es privada, no hay nube. Debes guardar tu copia.</span>';
+        }
+    }
+};
+
+window.finishManual = () => { 
+    if (confirm("He comprendido la importancia del Margen Libre y la seguridad de mis datos.")) {
+        localStorage.setItem('onboardingDone', 'true'); 
+        const modal = elements.modalOnboarding;
+        if (modal) {
+            modal.dataset.mandatory = "false";
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
+        document.body.style.overflow = '';
+        showToast("¡Excelente! Ahora tienes el control total.", "success");
+    }
+};
 
 // --- Help Assistant Chat Logic ---
+window.askChat = (questionText) => {
+    const input = document.getElementById('help-chat-input');
+    if (input) {
+        input.value = questionText;
+        elements.helpChatForm.dispatchEvent(new Event('submit'));
+    }
+};
 window.openHelpChat = () => {
     const modal = elements.helpChatModal;
     if (modal) {
@@ -2084,7 +2165,7 @@ function exportData() {
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
         setTimeout(() => URL.revokeObjectURL(url), 100);
-        showToast("Respaldo exportado con éxito.", "success");
+        showToast("✅ ¡Copia guardada con éxito! Guárdala bien para usarla en otros dispositivos.", "success");
     } catch (e) {
         console.error("Export error:", e);
         showToast("Error al generar el respaldo.", "danger");
@@ -2103,7 +2184,7 @@ function handleImport(e) {
             // Basic validation
             if (!backup || typeof backup !== 'object') throw new Error("Formato de archivo inválido.");
 
-            if (confirm("⚠️ ¿Estás seguro de importar estos datos? Se sobrescribirá tu información actual.")) {
+            if (confirm("⚠️ ¿Quieres recuperar esta copia? Esto reemplazará todo lo que tienes cargado en este momento.")) {
                 localStorage.clear();
 
                 let count = 0;
@@ -2120,7 +2201,7 @@ function handleImport(e) {
                     count++;
                 });
 
-                showToast(`¡${count} módulos importados con éxito! Reiniciando...`, "success");
+                showToast(`✅ ¡Datos recuperados con éxito! El sistema se reiniciará para aplicar los cambios.`, "success");
 
                 // Final safety: Force immediate update of common global arrays if possible
                 // though reload is the main way to sync.

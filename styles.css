@@ -947,6 +947,89 @@ canvas {
     padding: 1.2rem;
     gap: 1rem;
   }
+
+  .help-fab {
+    display: none !important;
+  }
+}
+
+/* Specific Hide Rule for Manual */
+#modal-onboarding:not(.hidden) ~ .help-fab {
+  display: none !important;
+}
+
+#help-chat-modal:not(.hidden) ~ .help-fab {
+  display: none !important;
+}
+
+/* Scrollable Manual Content for Mobile */
+.manual-card {
+  overflow-y: auto;
+  max-height: 70vh;
+  padding-right: 8px;
+}
+
+.quiz-feedback {
+  margin-top: 0.8rem;
+  min-height: 1.2rem;
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Chatbot Suggestion Chips */
+.chat-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.chip {
+  background: rgba(var(--primary-rgb), 0.1);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chip:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Quiz Specific Buttons */
+.quiz-options {
+  width: 100%;
+}
+
+.quiz-btn {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid var(--glass-border) !important;
+  text-align: left !important;
+  padding: 0.8rem 1rem !important;
+  font-size: 0.85rem !important;
+  width: 100% !important;
+  justify-content: flex-start !important;
+  height: auto !important;
+  white-space: normal !important;
+}
+
+.quiz-btn:hover {
+  background: rgba(255,255,255,0.1) !important;
+  border-color: var(--primary) !important;
+}
+
+.manual-card {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 5px;
 }
 
 /* Custom Multi-Select Dropdown */
@@ -1125,6 +1208,25 @@ canvas {
   text-align: center;
   padding: 1rem;
   animation: slideIn 0.4s ease-out;
+}
+
+@media (max-width: 600px) {
+  .manual-icon {
+    font-size: 2.2rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .manual-title {
+    font-size: 1.4rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .manual-text {
+    font-size: 0.95rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 1rem !important;
+  }
+  .manual-card {
+    max-height: 55vh !important;
+  }
 }
 
 @keyframes slideIn {
