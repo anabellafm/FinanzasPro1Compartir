@@ -1,40 +1,33 @@
-const CACHE_NAME = 'finanzas-pro-v3';
+const CACHE_NAME = 'finanzas-pro-v12';
 const ASSETS = [
     './',
     './index.html',
-    './styles.css',
-    './app.js',
-    './icon.png',
+    './styles.css?v=12',
+    './app.js?v=12',
+    './chatbot_knowledge.js',
     './manifest.json'
 ];
 
-// Install Event
 self.addEventListener('install', (e) => {
-    self.skipWaiting(); // Force the waiting service worker to become the active service worker
+    self.skipWaiting();
     e.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS);
-        })
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
     );
 });
 
-// Activate Event
 self.addEventListener('activate', (e) => {
     e.waitUntil(
         caches.keys().then((keys) => {
             return Promise.all(
                 keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
             );
-        }).then(() => self.clients.claim()) // Become available to all pages
+        }).then(() => self.clients.claim())
     );
 });
 
-// Fetch Event
 self.addEventListener('fetch', (e) => {
-    // Strategy: Cache First, then Network
+    // Network First strategy
     e.respondWith(
-        caches.match(e.request).then((response) => {
-            return response || fetch(e.request);
-        })
+        fetch(e.request).catch(() => caches.match(e.request))
     );
 });
