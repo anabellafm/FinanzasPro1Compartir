@@ -1225,7 +1225,9 @@ canvas {
     margin-bottom: 1rem !important;
   }
   .manual-card {
-    max-height: 55vh !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+    padding-bottom: 2rem !important;
   }
 }
 
