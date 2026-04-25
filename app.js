@@ -503,6 +503,16 @@ function openModal(modal) {
     if (modal.dataset.mandatory === "true") {
         document.body.style.overflow = 'hidden';
     }
+    // JS Control for FAB visibility
+    toggleAllFABs(false);
+}
+
+function toggleAllFABs(show) {
+    const fabs = document.querySelectorAll('.help-fab');
+    fabs.forEach(fab => {
+        if (show) fab.classList.remove('hidden-fab');
+        else fab.classList.add('hidden-fab');
+    });
 }
 
 function closeModal(modal) {
@@ -528,6 +538,8 @@ function closeModal(modal) {
             elements.goalForm.reset();
             editingGoalId = null;
         }
+        // Force restoration of FABs
+        toggleAllFABs(true);
     }, 300);
 }
 
@@ -2066,6 +2078,7 @@ window.finishManual = () => {
             modal.style.display = 'none';
         }
         document.body.style.overflow = '';
+        toggleAllFABs(true);
         showToast("¡Excelente! Ahora tienes el control total.", "success");
     }
 };

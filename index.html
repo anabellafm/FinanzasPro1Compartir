@@ -26,16 +26,20 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script>
-        // PURGA DE EMERGENCIA v12.3
-        const APP_VERSION = '12.3';
+        // PURGA NUCLEAR v12.5
+        const APP_VERSION = '12.5';
         if (localStorage.getItem('finanzas_pro_v') !== APP_VERSION) {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistrations().then(regs => {
-                    for(let reg of regs) reg.unregister();
+                    for(let reg of regs) {
+                        reg.unregister();
+                        console.log('SW Purged');
+                    }
                 });
             }
             localStorage.setItem('finanzas_pro_v', APP_VERSION);
-            // No recargamos aquí para evitar bucles, pero la siguiente carga será limpia
+            // El recargo forzado asegura que el JS nuevo (con el control de botones) tome el mando
+            setTimeout(() => window.location.reload(true), 500);
         }
     </script>
     <style>
