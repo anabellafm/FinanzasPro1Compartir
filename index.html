@@ -26,8 +26,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script>
-        // PURGA NUCLEAR v12.5
-        const APP_VERSION = '12.5';
+        // PURGA NUCLEAR v13.3
+        const APP_VERSION = '13.3';
         if (localStorage.getItem('finanzas_pro_v') !== APP_VERSION) {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistrations().then(regs => {
@@ -44,6 +44,23 @@
     </script>
     <style>
         /* Refuerzo de visibilidad para FABs en móviles */
+        .manual-card:not(.hidden) {
+            height: 72vh !important;
+            display: grid !important;
+        }
+        .manual-icon {
+            font-size: 1.5rem !important;
+            margin-bottom: 0.2rem !important;
+        }
+        .manual-title {
+            font-size: 1.1rem !important;
+            margin-bottom: 0.4rem !important;
+        }
+        .manual-text {
+            font-size: 0.9rem !important;
+            line-height: 1.3 !important;
+            margin-bottom: 0.6rem !important;
+        }
         .help-fab { z-index: 9999 !important; }
     </style>
 </head>
@@ -819,17 +836,19 @@
             <div id="manual-step-4" class="manual-card hidden">
                 <span class="manual-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">🤖</span>
                 <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Tu Guía: El Coach</h2>
-                <p class="manual-text" style="font-size: 0.9rem; margin-bottom: 0.6rem;">
-                    El Coach Financiero analiza tus patrones y te da consejos en tiempo real para cuidar tus hábitos.
-                </p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.6rem;">
-                    <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
-                        <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Consejos AI</p>
-                        <p style="margin:0; font-size: 0.6rem;">Alertas y fugas.</p>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
-                        <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Motivación</p>
-                        <p style="margin:0; font-size: 0.6rem;">Te empuja a seguir.</p>
+                <div class="manual-content">
+                    <p class="manual-text" style="font-size: 0.9rem; margin-bottom: 0.6rem;">
+                        El Coach Financiero analiza tus patrones y te da consejos en tiempo real para cuidar tus hábitos.
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.6rem;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                            <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Consejos AI</p>
+                            <p style="margin:0; font-size: 0.6rem;">Alertas y fugas.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                            <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Motivación</p>
+                            <p style="margin:0; font-size: 0.6rem;">Te empuja a seguir.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="manual-steps-dot">
@@ -880,17 +899,19 @@
             <div id="manual-step-6" class="manual-card hidden">
                 <span class="manual-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">🌍</span>
                 <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Un Ecosistema Íntegro</h2>
-                <p class="manual-text" style="font-size: 0.9rem; margin-bottom: 0.6rem;">
-                    Todo está conectado: Sidebar, Monitor Global y Metas. Tus decisiones afectan a todo el sistema.
-                </p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.6rem;">
-                    <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
-                        <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Integridad</p>
-                        <p style="margin:0; font-size: 0.6rem;">Vista Multimoneda.</p>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
-                        <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Control</p>
-                        <p style="margin:0; font-size: 0.6rem;">Precisión total.</p>
+                <div class="manual-content">
+                    <p class="manual-text" style="font-size: 0.9rem; margin-bottom: 0.6rem;">
+                        Todo está conectado: Sidebar, Monitor Global y Metas. Tus decisiones afectan a todo el sistema.
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.6rem;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                            <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Integridad</p>
+                            <p style="margin:0; font-size: 0.6rem;">Vista Multimoneda.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                            <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Control</p>
+                            <p style="margin:0; font-size: 0.6rem;">Precisión total.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="manual-steps-dot">
@@ -958,17 +979,19 @@
             <div id="manual-step-9" class="manual-card hidden">
                 <span class="manual-icon" style="font-size: 2.2rem; margin-bottom: 0.5rem;">🎓</span>
                 <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Desafío Final</h2>
-                <div style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
-                    <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.3; margin: 0; font-weight: 600;">
-                        ¿Cuál es el indicador clave que te dice si tus metas son sostenibles en el tiempo?
-                    </p>
+                <div class="manual-content">
+                    <div style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
+                        <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.3; margin: 0; font-weight: 600;">
+                            ¿Cuál es el indicador clave que te dice si tus metas son sostenibles en el tiempo?
+                        </p>
+                    </div>
+                    <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 1)" style="padding: 0.6rem; font-size: 0.85rem;">A) El Saldo Total</button>
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 2)" style="padding: 0.6rem; font-size: 0.85rem;">B) El Margen Libre</button>
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 3)" style="padding: 0.6rem; font-size: 0.85rem;">C) El nivel de XP</button>
+                    </div>
+                    <div id="quiz-feedback-1" class="quiz-feedback"></div>
                 </div>
-                <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
-                    <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 1)" style="padding: 0.6rem; font-size: 0.85rem;">A) El Saldo Total</button>
-                    <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 2)" style="padding: 0.6rem; font-size: 0.85rem;">B) El Margen Libre</button>
-                    <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 3)" style="padding: 0.6rem; font-size: 0.85rem;">C) El nivel de XP</button>
-                </div>
-                <div id="quiz-feedback-1" class="quiz-feedback"></div>
                 <div class="manual-steps-dot">
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
@@ -990,17 +1013,19 @@
             <div id="manual-step-10" class="manual-card hidden">
                 <span class="manual-icon" style="font-size: 2.2rem; margin-bottom: 0.5rem;">💾</span>
                 <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Certificación de Datos</h2>
-                <div style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
-                    <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.3; margin: 0; font-weight: 600;">
-                        Si cambias de celular o equipo, ¿cómo recuperas tu información?
-                    </p>
+                <div class="manual-content">
+                    <div style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
+                        <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.3; margin: 0; font-weight: 600;">
+                            Si cambias de celular o equipo, ¿cómo recuperas tu información?
+                        </p>
+                    </div>
+                    <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 2)" style="padding: 0.6rem; font-size: 0.85rem;">B) Debo usar mi Copia de Seguridad</button>
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 1)" style="padding: 0.6rem; font-size: 0.85rem;">A) Sincronización Gmail</button>
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 3)" style="padding: 0.6rem; font-size: 0.85rem;">C) Soporte Técnico</button>
+                    </div>
+                    <div id="quiz-feedback-2" class="quiz-feedback"></div>
                 </div>
-                <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
-                    <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 2)" style="padding: 0.6rem; font-size: 0.85rem;">B) Debo usar mi Copia de Seguridad</button>
-                    <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 1)" style="padding: 0.6rem; font-size: 0.85rem;">A) Sincronización Gmail</button>
-                    <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 3)" style="padding: 0.6rem; font-size: 0.85rem;">C) Soporte Técnico</button>
-                </div>
-                <div id="quiz-feedback-2" class="quiz-feedback"></div>
                 <div class="manual-steps-dot">
                     <span class="manual-dot"></span>
                     <span class="manual-dot"></span>
@@ -1017,6 +1042,7 @@
                     <button onclick="nextManualStep(9)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1; padding: 0.6rem;">Atrás</button>
                 </div>
             </div>
+            <div style="position: absolute; bottom: 5px; left: 10px; font-size: 8px; opacity: 0.3; pointer-events: none; color: var(--text-primary);">v13.3</div>
         </div>
     </div>
     <!-- Help Assistant Chat -->
