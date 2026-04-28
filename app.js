@@ -1,3 +1,11 @@
+/* ======================================================================
+   Copyright (c) 2026 Anabella Franza M. - Finanzas Pro
+   Todos los derechos reservados.
+   
+   Prohibida la copia, clonación, redistribución o uso comercial.
+   El código fuente está protegido bajo leyes de propiedad intelectual.
+   ====================================================================== */
+
 // App Logic - Final optimized for Multi-Select & USDC & Themes & Goals
 
 // Safe Parse Helper to prevent crashes
