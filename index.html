@@ -5,14 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Finanzas Pro - Dashboard de Misión</title>
-    
+
     <!-- WhatsApp / Redes Sociales Preview (Open Graph) -->
     <meta property="og:title" content="Finanzas Pro | Por Ani Franza M.">
-    <meta property="og:description" content="El 95% de las decisiones financieras son emocionales. ¡Explora tu relación con el dinero desde una mirada más consciente e integral! (Herramienta de prueba)">
+    <meta property="og:description"
+        content="El 95% de las decisiones financieras son emocionales. ¡Explora tu relación con el dinero desde una mirada más consciente e integral! (Herramienta de prueba)">
     <meta property="og:image" content="https://anabellafm.github.io/FinanzasPro1Compartir/icon.png">
     <meta property="og:url" content="https://anabellafm.github.io/FinanzasPro1Compartir/">
     <meta property="og:type" content="website">
-    
+
     <!-- Evitar Cache Agresivo -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -31,14 +32,14 @@
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <script>
-        // PURGA NUCLEAR v13.5
-        const APP_VERSION = '13.5';
+        // PURGA NUCLEAR v13.3
+        const APP_VERSION = '13.3';
         if (localStorage.getItem('finanzas_pro_v') !== APP_VERSION) {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistrations().then(regs => {
-                    for(let reg of regs) {
+                    for (let reg of regs) {
                         reg.unregister();
                         console.log('SW Purged');
                     }
@@ -55,45 +56,63 @@
             height: 72vh !important;
             display: grid !important;
         }
+
         .manual-icon {
             font-size: 1.5rem !important;
             margin-bottom: 0.2rem !important;
         }
+
         .manual-title {
             font-size: 1.1rem !important;
             margin-bottom: 0.4rem !important;
         }
+
         .manual-text {
             font-size: 0.9rem !important;
             line-height: 1.3 !important;
             margin-bottom: 0.6rem !important;
         }
-        .help-fab { z-index: 9999 !important; }
-        
-        /* Responsive Visibility Utilities */
-        @media (max-width: 1100px) {
-            .desktop-only { display: none !important; }
-        }
-        @media (min-width: 1101px) {
-            .mobile-only { display: none !important; }
+
+        .help-fab {
+            z-index: 9999 !important;
         }
 
+        /* Responsive Visibility Utilities */
+        @media (max-width: 1100px) {
+            .desktop-only {
+                display: none !important;
+            }
+        }
+
+        @media (min-width: 1101px) {
+            .mobile-only {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="app-container">
         <!-- PREÁMBULO EMOCIONAL (MOBILE ONLY) - Visible al principio en celulares -->
-        <div class="card mobile-only" style="text-align: center; margin-bottom: 1rem; border-color: rgba(var(--primary-rgb), 0.3);">
-            <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-primary);">No es solo sobre números</h2>
-            <p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem;">Es sobre cómo te relacionás con tu dinero.</p>
-            <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.8rem; margin-bottom: 1.5rem; display: inline-block; text-align: left; max-width: 90%;">
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4; text-align: center;">
-                    Esta app está en etapa de prueba y la comparto libremente de corazón para quien quiera usarla. Te invito a explorar y ver qué te aporta, aclarando que se brinda sin compromiso de continuidad ni obligación de soporte.
+        <div class="card mobile-only"
+            style="text-align: center; margin-bottom: 1rem; border-color: rgba(var(--primary-rgb), 0.3);">
+            <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-primary);">No es solo sobre números
+            </h2>
+            <p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem;">Es sobre cómo te relacionás
+                con tu dinero.</p>
+            <div
+                style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.8rem; margin-bottom: 1.5rem; display: inline-block; text-align: left; max-width: 90%;">
+                <p
+                    style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4; text-align: center;">
+                    Esta app está en etapa de prueba y la comparto libremente de corazón para quien quiera usarla. Te
+                    invito a explorar y ver qué te aporta, aclarando que se brinda sin compromiso de continuidad ni
+                    obligación de soporte.
                 </p>
             </div>
             <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0;">
-                El 95% de las decisiones, incluso las financieras, son emocionales.<br>Esta herramienta es una forma simple de empezar a observar eso.
+                El 95% de las decisiones, incluso las financieras, son emocionales.<br>Esta herramienta es una forma
+                simple de empezar a observar eso.
             </p>
         </div>
 
@@ -220,8 +239,10 @@
                 <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
                     Configuración Moneda
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <button id="btn-sync-currency" class="info-icon-small" title="Sincronizar Tasas" style="background:none; border:none; cursor:pointer; font-size:1rem; padding:0; filter: drop-shadow(0 0 5px var(--primary));">🔄</button>
-                        <span class="info-icon-small" onclick="window.showSectionInfo('cur_config')" title="Saber más">❔</span>
+                        <button id="btn-sync-currency" class="info-icon-small" title="Sincronizar Tasas"
+                            style="background:none; border:none; cursor:pointer; font-size:1rem; padding:0; filter: drop-shadow(0 0 5px var(--primary));">🔄</button>
+                        <span class="info-icon-small" onclick="window.showSectionInfo('cur_config')"
+                            title="Saber más">❔</span>
                     </div>
                 </label>
 
@@ -261,38 +282,48 @@
 
                 <div class="exchange-grid" style="display: grid; gap: 0.5rem;">
                     <div>
-                        <label class="form-label" style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                        <label class="form-label"
+                            style="font-size: 0.75rem; display: flex; justify-content: space-between;">
                             <span>¿Cuántos <span class="local-symbol">ARS</span> cuesta 1 USD?</span>
-                            <span class="lock-indicator" id="lock-usd" title="Bloqueado manualmente" style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
+                            <span class="lock-indicator" id="lock-usd" title="Bloqueado manualmente"
+                                style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
                         </label>
                         <input type="number" id="rate-usd" class="form-control" placeholder="Ej: 1200"
                             style="padding: 0.4rem;">
                     </div>
                     <div>
-                        <label class="form-label" style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                        <label class="form-label"
+                            style="font-size: 0.75rem; display: flex; justify-content: space-between;">
                             <span>¿Cuántos <span class="local-symbol">ARS</span> cuesta 1 USDT?</span>
-                            <span class="lock-indicator" id="lock-usdt" title="Bloqueado manualmente" style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
+                            <span class="lock-indicator" id="lock-usdt" title="Bloqueado manualmente"
+                                style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
                         </label>
                         <input type="number" id="rate-usdt" class="form-control" placeholder="Ej: 1210"
                             style="padding: 0.4rem;">
                     </div>
                     <div>
-                        <label class="form-label" style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                        <label class="form-label"
+                            style="font-size: 0.75rem; display: flex; justify-content: space-between;">
                             <span>¿Cuántos <span class="local-symbol">ARS</span> cuesta 1 USDC?</span>
-                            <span class="lock-indicator" id="lock-usdc" title="Bloqueado manualmente" style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
+                            <span class="lock-indicator" id="lock-usdc" title="Bloqueado manualmente"
+                                style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
                         </label>
                         <input type="number" id="rate-usdc" class="form-control" placeholder="Ej: 1215"
                             style="padding: 0.4rem;">
                     </div>
                     <div>
-                        <label class="form-label" style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                        <label class="form-label"
+                            style="font-size: 0.75rem; display: flex; justify-content: space-between;">
                             <span>¿Cuántos <span class="local-symbol">ARS</span> cuesta 1 EUR?</span>
-                            <span class="lock-indicator" id="lock-eur" title="Bloqueado manualmente" style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
+                            <span class="lock-indicator" id="lock-eur" title="Bloqueado manualmente"
+                                style="display: none; color: var(--warning); font-size: 0.7rem;">🔒</span>
                         </label>
                         <input type="number" id="rate-eur" class="form-control" placeholder="Ej: 1300"
                             style="padding: 0.4rem;">
                     </div>
-                    <button id="btn-reset-locks" class="btn-primary" style="background: rgba(var(--primary-rgb), 0.1); font-size: 0.7rem; padding: 0.4rem; justify-content: center; margin-top: 0.5rem; display: none;">🔓 Liberar Bloqueos</button>
+                    <button id="btn-reset-locks" class="btn-primary"
+                        style="background: rgba(var(--primary-rgb), 0.1); font-size: 0.7rem; padding: 0.4rem; justify-content: center; margin-top: 0.5rem; display: none;">🔓
+                        Liberar Bloqueos</button>
                     <div id="currency-manager" style="display: contents;"></div>
                 </div>
             </div>
@@ -324,7 +355,8 @@
 
             <!-- Data Management Section -->
             <div class="filter-group" style="padding-top: 1rem; border-top: solid 1px var(--glass-border);">
-                <label class="form-label" style="text-align:center; display:block; font-weight: 700;">💾 Mis Datos y Respaldo</label>
+                <label class="form-label" style="text-align:center; display:block; font-weight: 700;">💾 Mis Datos y
+                    Respaldo</label>
                 <p style="font-size: 0.65rem; color: var(--text-muted); text-align: center; margin-bottom: 0.8rem;">
                     Los datos se guardan solo en este navegador. Si cambias de equipo, usa estos botones:
                 </p>
@@ -351,16 +383,24 @@
         <!-- Main Dashboard Content -->
         <main class="main-content">
             <!-- PREÁMBULO EMOCIONAL (DESKTOP ONLY) - Mantiene el diseño a la derecha en PC -->
-            <div id="emotional-header-desktop" class="card desktop-only" style="text-align: center; margin-bottom: 0.5rem; border-color: rgba(var(--primary-rgb), 0.3);">
-                <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-primary);">No es solo sobre números</h2>
-                <p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem;">Es sobre cómo te relacionás con tu dinero.</p>
-                <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.8rem; margin-bottom: 1.5rem; display: inline-block; text-align: left; max-width: 90%;">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4; text-align: center;">
-                        Esta app está en etapa de prueba y la comparto libremente de corazón para quien quiera usarla. Te invito a explorar y ver qué te aporta, aclarando que se brinda sin compromiso de continuidad ni obligación de soporte.
+            <div id="emotional-header-desktop" class="card desktop-only"
+                style="text-align: center; margin-bottom: 0.5rem; border-color: rgba(var(--primary-rgb), 0.3);">
+                <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-primary);">No es solo sobre
+                    números</h2>
+                <p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem;">Es sobre cómo te
+                    relacionás con tu dinero.</p>
+                <div
+                    style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.8rem; margin-bottom: 1.5rem; display: inline-block; text-align: left; max-width: 90%;">
+                    <p
+                        style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4; text-align: center;">
+                        Esta app está en etapa de prueba y la comparto libremente de corazón para quien quiera usarla.
+                        Te invito a explorar y ver qué te aporta, aclarando que se brinda sin compromiso de continuidad
+                        ni obligación de soporte.
                     </p>
                 </div>
                 <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0;">
-                    El 95% de las decisiones, incluso las financieras, son emocionales.<br>Esta herramienta es una forma simple de empezar a observar eso.
+                    El 95% de las decisiones, incluso las financieras, son emocionales.<br>Esta herramienta es una forma
+                    simple de empezar a observar eso.
                 </p>
             </div>
 
@@ -477,7 +517,8 @@
                         <span class="info-icon-small" onclick="window.showSectionInfo('categorias')"
                             title="Saber más">❔</span>
                     </h3>
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; min-height:240px; overflow-y:auto;">
+                    <div
+                        style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; min-height:240px; overflow-y:auto;">
                         <div id="chart-category-income"></div>
                         <div id="chart-category-expense"></div>
                     </div>
@@ -488,7 +529,8 @@
                         <span class="info-icon-small" onclick="window.showSectionInfo('metodos')"
                             title="Saber más">❔</span>
                     </h3>
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; min-height:240px; overflow-y:auto;">
+                    <div
+                        style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; min-height:240px; overflow-y:auto;">
                         <div id="chart-payment-income"></div>
                         <div id="chart-payment-expense"></div>
                     </div>
@@ -806,14 +848,19 @@
     <!-- Modals and Overlays are siblings of FABs for better CSS targeting -->
 
     <!-- Modal Onboarding (Interactive Manual) -->
-    <div id="modal-onboarding" class="modal-overlay hidden" style="z-index: 2000; pointer-events: all;" data-mandatory="true">
+    <div id="modal-onboarding" class="modal-overlay hidden" style="z-index: 2000; pointer-events: all;"
+        data-mandatory="true">
         <div class="modal-content" style="max-width: 600px; padding: 2.5rem; position: relative;">
             <!-- Removed Close Button to force reading -->
             <!-- Step 1: Misión -->
             <div id="manual-step-1" class="manual-card">
-                <div style="background: rgba(var(--primary-rgb), 0.1); border: 1px solid var(--primary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                    <p style="font-size: 0.8rem; margin: 0; color: var(--primary); font-weight: 700;">⚠️ ATENCIÓN: Por favor, lee cada paso con detenimiento.</p>
-                    <p style="font-size: 0.75rem; margin: 0.5rem 0 0 0; line-height: 1.3;">Este sistema utiliza una metodología de <b>Integralidad</b>. Usarlo sin comprenderlo puede darte una falsa sensación de control o conclusiones erróneas sobre tu economía.</p>
+                <div
+                    style="background: rgba(var(--primary-rgb), 0.1); border: 1px solid var(--primary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <p style="font-size: 0.8rem; margin: 0; color: var(--primary); font-weight: 700;">⚠️ ATENCIÓN: Por
+                        favor, lee cada paso con detenimiento.</p>
+                    <p style="font-size: 0.75rem; margin: 0.5rem 0 0 0; line-height: 1.3;">Este sistema utiliza una
+                        metodología de <b>Integralidad</b>. Usarlo sin comprenderlo puede darte una falsa sensación de
+                        control o conclusiones erróneas sobre tu economía.</p>
                 </div>
                 <h2 class="manual-title">Tu Brújula Financiera</h2>
                 <p class="manual-text">
@@ -899,14 +946,17 @@
                 <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Tu Guía: El Coach</h2>
                 <div class="manual-content">
                     <p class="manual-text" style="font-size: 0.9rem; margin-bottom: 0.6rem;">
-                        El Coach Financiero analiza tus patrones y te da consejos en tiempo real para cuidar tus hábitos.
+                        El Coach Financiero analiza tus patrones y te da consejos en tiempo real para cuidar tus
+                        hábitos.
                     </p>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.6rem;">
-                        <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <div
+                            style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
                             <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Consejos AI</p>
                             <p style="margin:0; font-size: 0.6rem;">Alertas y fugas.</p>
                         </div>
-                        <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <div
+                            style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
                             <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Motivación</p>
                             <p style="margin:0; font-size: 0.6rem;">Te empuja a seguir.</p>
                         </div>
@@ -951,7 +1001,8 @@
                     <span class="manual-dot"></span>
                 </div>
                 <div class="manual-card-actions" style="display: flex; gap: 1rem; margin-top: 1rem;">
-                    <button onclick="nextManualStep(4)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(4)" class="btn-primary"
+                        style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
                     <button onclick="nextManualStep(6)" class="btn-primary" style="flex: 1;">Siguiente</button>
                 </div>
             </div>
@@ -965,11 +1016,13 @@
                         Todo está conectado: Sidebar, Monitor Global y Metas. Tus decisiones afectan a todo el sistema.
                     </p>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.6rem;">
-                        <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <div
+                            style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
                             <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Integridad</p>
                             <p style="margin:0; font-size: 0.6rem;">Vista Multimoneda.</p>
                         </div>
-                        <div style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <div
+                            style="background: rgba(255,255,255,0.05); padding: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border);">
                             <p style="margin:0; font-size: 0.75rem; color: var(--primary);">Control</p>
                             <p style="margin:0; font-size: 0.6rem;">Precisión total.</p>
                         </div>
@@ -988,7 +1041,8 @@
                     <span class="manual-dot"></span>
                 </div>
                 <div class="manual-card-actions" style="display: flex; gap: 1rem; margin-top: 0.5rem;">
-                    <button onclick="nextManualStep(5)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(5)" class="btn-primary"
+                        style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
                     <button onclick="nextManualStep(7)" class="btn-primary" style="flex: 1;">Siguiente</button>
                 </div>
             </div>
@@ -1004,7 +1058,8 @@
                     Usa el <b>Lock (Bloqueo)</b> en el Sidebar para fijar cotizaciones si manejas efectivo propio.
                 </p>
                 <div class="manual-card-actions" style="display: flex; gap: 1rem; margin-top: 1rem;">
-                    <button onclick="nextManualStep(6)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(6)" class="btn-primary"
+                        style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
                     <button onclick="nextManualStep(8)" class="btn-primary" style="flex: 1;">Último Paso</button>
                 </div>
             </div>
@@ -1014,7 +1069,8 @@
                 <span class="manual-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">📲</span>
                 <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Tus Datos, Tu Control</h2>
                 <p class="manual-text" style="font-size: 0.9rem; margin-bottom: 1rem;">
-                    Esta App es 100% privada. Usa <b>"Guardar Copia"</b> para respaldar tu información y moverla de un equipo a otro.
+                    Esta App es 100% privada. Usa <b>"Guardar Copia"</b> para respaldar tu información y moverla de un
+                    equipo a otro.
                 </p>
                 <div class="manual-steps-dot">
                     <span class="manual-dot"></span>
@@ -1029,7 +1085,8 @@
                     <span class="manual-dot"></span>
                 </div>
                 <div class="manual-card-actions" style="display: flex; gap: 1rem; margin-top: 1rem;">
-                    <button onclick="nextManualStep(7)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(7)" class="btn-primary"
+                        style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
                     <button onclick="nextManualStep(9)" class="btn-primary" style="flex: 1;">Desafío Final</button>
                 </div>
             </div>
@@ -1041,15 +1098,21 @@
                 <span class="manual-icon" style="font-size: 2.2rem; margin-bottom: 0.5rem;">🎓</span>
                 <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Desafío Final</h2>
                 <div class="manual-content">
-                    <div style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
-                        <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.3; margin: 0; font-weight: 600;">
+                    <div
+                        style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
+                        <p
+                            style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.3; margin: 0; font-weight: 600;">
                             ¿Cuál es el indicador clave que te dice si tus metas son sostenibles en el tiempo?
                         </p>
                     </div>
-                    <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
-                        <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 1)" style="padding: 0.6rem; font-size: 0.85rem;">A) El Saldo Total</button>
-                        <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 2)" style="padding: 0.6rem; font-size: 0.85rem;">B) El Margen Libre</button>
-                        <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 3)" style="padding: 0.6rem; font-size: 0.85rem;">C) El nivel de XP</button>
+                    <div class="quiz-options"
+                        style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 1)"
+                            style="padding: 0.6rem; font-size: 0.85rem;">A) El Saldo Total</button>
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 2)"
+                            style="padding: 0.6rem; font-size: 0.85rem;">B) El Margen Libre</button>
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(1, 3)"
+                            style="padding: 0.6rem; font-size: 0.85rem;">C) El nivel de XP</button>
                     </div>
                     <div id="quiz-feedback-1" class="quiz-feedback"></div>
                 </div>
@@ -1066,7 +1129,8 @@
                     <span class="manual-dot"></span>
                 </div>
                 <div class="manual-card-actions" style="display: flex; gap: 0.8rem; margin-top: 0.5rem;">
-                    <button onclick="nextManualStep(8)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
+                    <button onclick="nextManualStep(8)" class="btn-primary"
+                        style="background: var(--bg-card-hover); flex: 1;">Atrás</button>
                 </div>
             </div>
 
@@ -1075,15 +1139,21 @@
                 <span class="manual-icon" style="font-size: 2.2rem; margin-bottom: 0.5rem;">💾</span>
                 <h2 class="manual-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Certificación de Datos</h2>
                 <div class="manual-content">
-                    <div style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
-                        <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.3; margin: 0; font-weight: 600;">
+                    <div
+                        style="background: rgba(var(--primary-rgb), 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(var(--primary-rgb), 0.2);">
+                        <p
+                            style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.3; margin: 0; font-weight: 600;">
                             Si cambias de celular o equipo, ¿cómo recuperas tu información?
                         </p>
                     </div>
-                    <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
-                        <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 2)" style="padding: 0.6rem; font-size: 0.85rem;">B) Debo usar mi Copia de Seguridad</button>
-                        <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 1)" style="padding: 0.6rem; font-size: 0.85rem;">A) Sincronización Gmail</button>
-                        <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 3)" style="padding: 0.6rem; font-size: 0.85rem;">C) Soporte Técnico</button>
+                    <div class="quiz-options"
+                        style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.8rem;">
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 2)"
+                            style="padding: 0.6rem; font-size: 0.85rem;">B) Debo usar mi Copia de Seguridad</button>
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 1)"
+                            style="padding: 0.6rem; font-size: 0.85rem;">A) Sincronización Gmail</button>
+                        <button class="btn-primary quiz-btn" onclick="validateQuiz(2, 3)"
+                            style="padding: 0.6rem; font-size: 0.85rem;">C) Soporte Técnico</button>
                     </div>
                     <div id="quiz-feedback-2" class="quiz-feedback"></div>
                 </div>
@@ -1100,10 +1170,13 @@
                     <span class="manual-dot active"></span>
                 </div>
                 <div class="manual-card-actions" style="display: flex; gap: 0.8rem; margin-top: 0.5rem;">
-                    <button onclick="nextManualStep(9)" class="btn-primary" style="background: var(--bg-card-hover); flex: 1; padding: 0.6rem;">Atrás</button>
+                    <button onclick="nextManualStep(9)" class="btn-primary"
+                        style="background: var(--bg-card-hover); flex: 1; padding: 0.6rem;">Atrás</button>
                 </div>
             </div>
-            <div style="position: absolute; bottom: 5px; left: 10px; font-size: 8px; opacity: 0.3; pointer-events: none; color: var(--text-primary);">v13.3</div>
+            <div
+                style="position: absolute; bottom: 5px; left: 10px; font-size: 8px; opacity: 0.3; pointer-events: none; color: var(--text-primary);">
+                v13.3</div>
         </div>
     </div>
     <!-- Help Assistant Chat -->
@@ -1123,9 +1196,11 @@
             <div id="help-chat-messages" class="help-chat-messages">
                 <div class="message assistant" style="line-height: 1.4; font-size: 0.85rem;">
                     <b>¡Hola! Soy tu asistente.</b> 😊<br>
-                    Puedes escribirme tus dudas o usar los botones rápidos. Entiendo palabras como: <i>metas, coach, xp, margen libre</i>.
+                    Puedes escribirme tus dudas o usar los botones rápidos. Entiendo palabras como: <i>metas, coach, xp,
+                        margen libre</i>.
                 </div>
-                <div class="chat-suggestions" style="padding: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center;">
+                <div class="chat-suggestions"
+                    style="padding: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center;">
                     <button class="chip" onclick="askChat('¿Qué es el Margen Libre?')">📊 Margen Libre</button>
                     <button class="chip" onclick="askChat('¿Cómo mover datos a otro equipo?')">📲 Sincronizar</button>
                     <button class="chip" onclick="askChat('¿Cómo uso las metas?')">🎯 Objetivos</button>
@@ -1144,8 +1219,7 @@
         title="Manual de Misión e Integralidad">
         💡
     </div>
-    <div class="help-fab chat-fab" id="chat-trigger" onclick="window.openHelpChat()"
-        title="Asistente Finanzas Pro">
+    <div class="help-fab chat-fab" id="chat-trigger" onclick="window.openHelpChat()" title="Asistente Finanzas Pro">
         💬
     </div>
 
